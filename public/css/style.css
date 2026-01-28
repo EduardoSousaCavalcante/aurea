@@ -1,0 +1,149 @@
+/* Estilização do botão .btn-purple com tom de roxo */
+.btn-purple {
+    display: inline-block !important; /* Forçar o botão a se comportar como um botão inline */
+    padding: 0.375rem 0.75rem !important; /* Tamanho do botão */
+    font-size: 1rem !important; /* Tamanho da fonte */
+    font-weight: 400 !important; /* Peso da fonte */
+    text-align: center !important; /* Alinhamento do texto */
+    text-decoration: none !important; /* Remover sublinhado */
+    border-radius: 0.375rem !important; /* Bordas arredondadas */
+    line-height: 1.5 !important; /* Altura da linha do texto */
+    background-color: #6f42c1 !important; /* Cor de fundo roxa */
+    border: 1px solid #6f42c1 !important; /* Cor da borda roxa */
+    color: #fff !important; /* Cor do texto (branco) */
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important; /* Transições suaves */
+  }
+  
+  .btn-purple:hover {
+    background-color: #5a32a3 !important; /* Tom de roxo mais escuro no hover */
+    border-color: #4a2b8c !important; /* Cor da borda mais escura no hover */
+  }
+  
+  .btn-purple:focus, .btn-purple.focus {
+    box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.5) !important; /* Sombra roxa suave no foco */
+  }
+  
+  .btn-purple.disabled, .btn-purple:disabled {
+    background-color: #6f42c1 !important; /* Cor de fundo roxa no estado desabilitado */
+    border-color: #6f42c1 !important; /* Cor da borda roxa no estado desabilitado */
+    color: #fff !important; /* Texto branco */
+    opacity: 0.65 !important; /* Opacidade reduzida quando desabilitado */
+  }
+
+/* Estilização do botão outline roxo */
+.btn-outline-purple {
+    color: #6f42c1 !important; /* Cor do texto roxo */
+    background-color: transparent !important; /* Fundo transparente */
+    border: 1px solid #6f42c1 !important; /* Borda roxa */
+    padding: 0.375rem 0.75rem !important; /* Tamanho do botão */
+    font-size: 1rem !important; /* Tamanho da fonte */
+    font-weight: 400 !important; /* Peso da fonte */
+    border-radius: 0.375rem !important; /* Bordas arredondadas */
+    text-align: center !important; /* Alinhamento do texto */
+    text-decoration: none !important; /* Remover sublinhado */
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s !important; /* Transições suaves */
+  }
+  
+  .btn-outline-purple:hover {
+    background-color: #6f42c1 !important; /* Fundo roxo ao passar o mouse */
+    color: white !important; /* Texto branco ao passar o mouse */
+    border-color: #6f42c1 !important; /* Borda roxa no hover */
+  }
+  
+  .btn-outline-purple:focus, .btn-outline-purple.focus {
+    box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.5) !important; /* Sombra roxa suave no foco */
+  }
+  
+  .btn-outline-purple.disabled, .btn-outline-purple:disabled {
+    color: #6f42c1 !important; /* Cor do texto roxo no estado desabilitado */
+    background-color: transparent !important; /* Fundo transparente no estado desabilitado */
+    border-color: #6f42c1 !important; /* Borda roxa no estado desabilitado */
+    opacity: 0.65 !important; /* Opacidade reduzida quando desabilitado */
+  }
+
+
+  /* Utilitário de cor de fundo roxa */
+.bg-purple {
+    background-color: #6f42c1 !important; /* Cor de fundo roxa */
+  }
+  
+  /* Utilitário de cor de texto branca com o tom roxo */
+  .text-purple {
+    color: #6f42c1 !important; /* Cor do texto roxa */
+  }
+  
+  /* Utilitário de borda roxa */
+  .border-purple {
+    border: 1px solid #6f42c1 !important; /* Borda roxa */
+  }
+  
+  /* Utilitário de sombra roxa */
+  .shadow-purple {
+    box-shadow: 0 0 10px rgba(111, 66, 193, 0.5) !important; /* Sombra roxa suave */
+  }
+
+/* Adiciona uma sombrinha da navbar no carrosel*/
+.navbar {
+  position: relative;
+  z-index: 10; /* Maior que o z-index do carrossel */
+}
+
+/* Limita a altura máxima da imagem do carrosel */
+.carousel-item img {
+  max-height: 400px;
+}
+
+.card {
+    min-height: 355px;
+}
+
+/* Tema escuro */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .navbar {
+    background-color: #1f1f1f;
+}
+
+body.dark-mode .card {
+    background-color: #1f1f1f;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-purple {
+    background-color: #7c4dff;
+    color: #fff;
+}
+
+body.dark-mode .btn-outline-purple {
+    border-color: #7c4dff;
+    color: #7c4dff;
+}
+
+body.dark-mode .carousel-caption h5,
+body.dark-mode .carousel-caption p,
+body.dark-mode .navbar-brand{
+    color: #ffffff;
+}
+
+body.dark-mode .navbar,
+.navbar.dark-mode {
+    background-color: #1f1f1f !important;
+    color: #ffffff;
+}
+
+body.dark-mode .navbar .nav-link {
+    color: #ffffff !important;
+}
+
+body.dark-mode .navbar .btn-outline-purple {
+    border-color: #7c4dff;
+    color: #7c4dff;
+}
+
+body.dark-mode .navbar .btn-purple {
+    background-color: #7c4dff;
+    color: #fff;
+}
