@@ -22,8 +22,8 @@
             @endif
 
             <div class="mb-3">
-                <label for="nomeUsuario" class="form-label">Email de Acesso</label>
-                <input type="email" class="form-control" name="email" id="nomeUsuario" required>
+                <label for="nomeUsuario" class="form-label">Nome de Usuário</label>
+                <input type="text" class="form-control" name="name" id="nomeUsuario" required>
             </div>
 
             <div class="mb-3">
