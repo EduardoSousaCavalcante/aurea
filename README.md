@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://git.io/typing-svg">
-        <img src="https://readme-typing-svg.herokuapp.com?font=Arial&weight=600&size=30&letterSpacing=1px&duration=2000&pause=1000&center=true&width=435&color=7c4dff&lines=NewsGeek!;Eduardo+Sousa+Cavalcante" alt="Typing SVG" />
+        <img src="https://readme-typing-svg.herokuapp.com?font=Arial&weight=600&size=30&letterSpacing=1px&duration=2000&pause=1000&center=true&width=435&color=7c4dff&lines=Aurea!;Eduardo+Sousa+Cavalcante" alt="Typing SVG" />
     </a>
 </div>
 
@@ -8,10 +8,10 @@
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/EduardoSousaCavalcante/NewsGeek.git
+git clone https://github.com/EduardoSousaCavalcante/aurea.git
 
 # Entrar na pasta do projeto
-cd NewsGeek
+cd aurea
 
 # Instalar as dependências do node
 npm install
