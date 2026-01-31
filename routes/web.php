@@ -36,6 +36,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/dev/cards/{card}', [CardController::class, 'update'])->name('cards.update');
     Route::delete('/dev/cards/{card}', [CardController::class, 'destroy'])->name('cards.destroy');
 
+    //CRUD dos pedidos
+    Route::get('/dev/pedidos', [App\Http\Controllers\PedidoController::class, 'index'])->name('pedidos.index');
+    Route::get('/dev/pedidos/create', [App\Http\Controllers\PedidoController::class, 'create'])->name('pedidos.create');
+    Route::post('/dev/pedidos', [App\Http\Controllers\PedidoController::class, 'store'])->name('pedidos.store');
+    Route::get('/dev/pedidos/{pedido}/edit', [App\Http\Controllers\PedidoController::class, 'edit'])->name('pedidos.edit');
+    Route::put('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'update'])->name('pedidos.update');
+    Route::delete('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'destroy'])->name('pedidos.destroy');
+
     // CRUD dos carrosséis
     Route::get('/dev/carousels', [CarouselController::class, 'index'])->name('carousels.index');
     Route::get('/dev/carousels/create', [CarouselController::class, 'create'])->name('carousels.create');

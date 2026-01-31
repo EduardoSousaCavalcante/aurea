@@ -17,17 +17,20 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'user' => ['required', 'user'],
-            'password' => ['required'],
+            'name' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
+
+        // garantir apenas os campos necessários para o Auth::attempt
+        $credentials = $request->only('name', 'password');
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dev.index');
+            return redirect()->intended(route('dev.index'));
         }
 
         return back()->withErrors([
-            'user' => 'As credenciais não conferem.',
+            'name' => 'As credenciais não conferem.',
         ]);
     }
 

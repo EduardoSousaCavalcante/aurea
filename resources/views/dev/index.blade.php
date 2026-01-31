@@ -19,7 +19,7 @@
         </form> 
         <a href="{{ route('cards.index') }}" class="btn btn-purple btn-lg">Manter Cards</a>
         <a href="{{ route('carousels.index') }}" class="btn btn-purple btn-lg">Manter Carrossel</a>
-
+        <a href="{{ route('pedidos.index') }}" class="btn btn-purple btn-lg">Manter Pedidos</a>
     </div>
 </body>
 </html>
