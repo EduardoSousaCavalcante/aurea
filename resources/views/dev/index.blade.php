@@ -20,6 +20,7 @@
         <a href="{{ route('cards.index') }}" class="btn btn-purple btn-lg">Manter Cards</a>
         <a href="{{ route('carousels.index') }}" class="btn btn-purple btn-lg">Manter Carrossel</a>
         <a href="{{ route('pedidos.index') }}" class="btn btn-purple btn-lg">Manter Pedidos</a>
+        <a href="{{ route('clientes.index') }}" class="btn btn-purple btn-lg">Manter Clientes</a>
     </div>
 </body>
 </html>

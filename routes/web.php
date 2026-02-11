@@ -5,6 +5,8 @@ use App\Http\Controllers\LoginController;
 use App\Models\Card;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CarouselController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\ClienteController;
 
 // Página pública (inicio)
 Route::get('/', function () {
@@ -43,6 +45,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/dev/pedidos/{pedido}/edit', [App\Http\Controllers\PedidoController::class, 'edit'])->name('pedidos.edit');
     Route::put('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'update'])->name('pedidos.update');
     Route::delete('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'destroy'])->name('pedidos.destroy');
+    
+    //CRUD dos clientes
+    Route::get('/dev/clientes', [App\Http\Controllers\ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('/dev/clientes/create', [App\Http\Controllers\ClienteController::class, 'create'])->name('clientes.create');
+    Route::post('/dev/clientes', [App\Http\Controllers\ClienteController::class, 'store'])->name('clientes.store');
+    Route::get('/dev/clientes/{cliente}/edit', [App\Http\Controllers\ClienteController::class, 'edit'])->name('clientes.edit');
+    Route::put('/dev/clientes/{cliente}', [App\Http\Controllers\ClienteController::class, 'update'])->name('clientes.update');
+    Route::delete('/dev/clientes/{cliente}', [App\Http\Controllers\ClienteController::class, 'destroy'])->name('clientes.destroy');
 
     // CRUD dos carrosséis
     Route::get('/dev/carousels', [CarouselController::class, 'index'])->name('carousels.index');
