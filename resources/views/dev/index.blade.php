@@ -9,18 +9,28 @@
 </head>
 <body class="bg-light">
     <div class="container py-5">
-        <h1 class="mb-4">Bem-vindo, {{ Auth::user()->name }}!</h1>
+        <div class="d-flex align-items-start mb-4">
+            <h1 class="mb-1 me-3">Bem-vindo, {{ Auth::user()->name }}!</h1>
+            <a href="{{ route('pedidos.create') }}" class="btn btn-success btn-lg">Novo Pedido</a>
+        </div>
+        <hr class="my-4 border-2 border-secondary">
         <p>Área restrita de desenvolvedores.</p>
-        <a href="{{ route('inicio') }}" class="btn btn-secondary">Voltar</a>
-
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="btn btn-danger">Sair</button>
-        </form> 
-        <a href="{{ route('cards.index') }}" class="btn btn-purple btn-lg">Manter Cards</a>
-        <a href="{{ route('carousels.index') }}" class="btn btn-purple btn-lg">Manter Carrossel</a>
-        <a href="{{ route('pedidos.index') }}" class="btn btn-purple btn-lg">Manter Pedidos</a>
-        <a href="{{ route('clientes.index') }}" class="btn btn-purple btn-lg">Manter Clientes</a>
+        <div class="d-flex flex-wrap justify-content-between w-100">
+            <div class="w-100">
+                <a href="{{ route('cards.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Cards</a>
+                <a href="{{ route('carousels.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Carrossel</a>
+                <a href="{{ route('pedidos.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Pedidos</a>
+                <a href="{{ route('clientes.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Clientes</a>
+            </div>
+            <div class="d-flex align-items-center">
+                <a href="{{ route('inicio') }}" class="btn btn-secondary me-1">Voltar</a>
+        
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Sair</button>
+                </form> 
+            </div>
+        </div>
     </div>
 </body>
 </html>
