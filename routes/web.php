@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dev/pedidos', [App\Http\Controllers\PedidoController::class, 'index'])->name('pedidos.index');
     Route::get('/dev/pedidos/create', [App\Http\Controllers\PedidoController::class, 'create'])->name('pedidos.create');
     Route::post('/dev/pedidos', [App\Http\Controllers\PedidoController::class, 'store'])->name('pedidos.store');
+    Route::get('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'show'])->name('pedidos.show');
     Route::get('/dev/pedidos/{pedido}/edit', [App\Http\Controllers\PedidoController::class, 'edit'])->name('pedidos.edit');
     Route::put('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'update'])->name('pedidos.update');
     Route::delete('/dev/pedidos/{pedido}', [App\Http\Controllers\PedidoController::class, 'destroy'])->name('pedidos.destroy');
