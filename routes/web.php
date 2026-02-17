@@ -25,6 +25,15 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Área restrita (só acessa logado)
 Route::middleware('auth')->group(function () {
+        // CRUD dos produtos
+        Route::get('/dev/produtos', [App\Http\Controllers\ProdutoController::class, 'index'])->name('produtos.index');
+        Route::get('/dev/produtos/create', [App\Http\Controllers\ProdutoController::class, 'create'])->name('produtos.create');
+        Route::post('/dev/produtos', [App\Http\Controllers\ProdutoController::class, 'store'])->name('produtos.store');
+        Route::get('/dev/produtos/{produto}/edit', [App\Http\Controllers\ProdutoController::class, 'edit'])->name('produtos.edit');
+        Route::put('/dev/produtos/{produto}', [App\Http\Controllers\ProdutoController::class, 'update'])->name('produtos.update');
+        Route::delete('/dev/produtos/{produto}', [App\Http\Controllers\ProdutoController::class, 'destroy'])->name('produtos.destroy');
+        // Autocomplete produtos (AJAX)
+        Route::get('/dev/produtos/autocomplete', [App\Http\Controllers\ProdutoController::class, 'autocomplete'])->name('produtos.autocomplete');
     // Área Dev
     Route::get('/dev', function () {
         return view('dev.index');

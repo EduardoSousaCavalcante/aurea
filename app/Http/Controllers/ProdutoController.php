@@ -7,6 +7,16 @@ use App\Models\Produto;
 
 class ProdutoController extends Controller
 {
+    // Autocomplete para pesquisa de produtos (AJAX)
+    public function autocomplete(Request $request)
+    {
+        $termo = $request->get('q', '');
+        $produtos = Produto::where('nome', 'like', "%" . $termo . "%")
+            ->orderBy('nome')
+            ->limit(10)
+            ->get(['id', 'nome', 'preco', 'quantidade_por_caixa', 'descricao', 'imagem']);
+        return response()->json($produtos);
+    }
     // Listar produtos
     public function index()
     {
@@ -23,8 +33,11 @@ class ProdutoController extends Controller
     // Salvar produto
     public function store(Request $request)
     {
+
         $request->validate([
             'nome' => 'required|max:100',
+            'descricao' => 'required',
+            'quantidade_por_caixa' => 'required|integer|min:1',
             'preco' => 'required|numeric|min:0',
             'imagem' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
@@ -39,6 +52,8 @@ class ProdutoController extends Controller
 
         Produto::create([
             'nome' => $request->nome,
+            'descricao' => $request->descricao,
+            'quantidade_por_caixa' => $request->quantidade_por_caixa,
             'preco' => $request->preco,
             'imagem' => $nomeImagem,
         ]);
@@ -56,13 +71,18 @@ class ProdutoController extends Controller
     // Atualizar produto
     public function update(Request $request, Produto $produto)
     {
+
         $request->validate([
             'nome' => 'required|max:100',
+            'descricao' => 'required',
+            'quantidade_por_caixa' => 'required|integer|min:1',
             'preco' => 'required|numeric|min:0',
             'imagem' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         $produto->nome = $request->nome;
+        $produto->descricao = $request->descricao;
+        $produto->quantidade_por_caixa = $request->quantidade_por_caixa;
         $produto->preco = $request->preco;
 
         if ($request->hasFile('imagem')) {

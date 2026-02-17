@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Pedido extends Model
 {
@@ -19,13 +20,22 @@ class Pedido extends Model
         'data_pedido',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    protected $casts = [
+        'data_pedido' => 'datetime',
+    ];
 
-        static::creating(function ($model) {
-            if (!$model->chave_aleatoria) {
-                $model->chave_aleatoria = self::gerarChaveAleatoria();
+    /**
+     * Boot do model
+     */
+    protected static function booted(): void
+    {
+        static::creating(function ($pedido) {
+            if (empty($pedido->chave_aleatoria)) {
+                $pedido->chave_aleatoria = self::gerarChaveAleatoria();
+            }
+
+            if (empty($pedido->data_pedido)) {
+                $pedido->data_pedido = now();
             }
         });
     }
@@ -35,15 +45,15 @@ class Pedido extends Model
      */
     public static function gerarChaveAleatoria(): string
     {
-        $chave = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 12));
-        while (self::where('chave_aleatoria', $chave)->exists()) {
-            $chave = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 12));
-        }
+        do {
+            $chave = strtoupper(Str::random(12));
+        } while (self::where('chave_aleatoria', $chave)->exists());
+
         return $chave;
     }
 
     /**
-     * Relacionamento: Pedido pertence a um Cliente
+     * Pedido pertence a um Cliente
      */
     public function cliente(): BelongsTo
     {
@@ -51,7 +61,7 @@ class Pedido extends Model
     }
 
     /**
-     * Relacionamento: Pedido tem vários produtos
+     * Pedido possui vários Produtos (via tabela pivot)
      */
     public function produtos(): BelongsToMany
     {
@@ -60,6 +70,8 @@ class Pedido extends Model
             'pedido_produto',
             'id_pedido',
             'id_produto'
-        )->withPivot('quantidade', 'preco_unitario');
+        )
+        ->withPivot(['quantidade', 'preco_unitario'])
+        ->withTimestamps();
     }
 }

@@ -16,13 +16,24 @@ class PedidoProduto extends Model
         'preco_unitario',
     ];
 
+    protected $casts = [
+        'quantidade' => 'integer',
+        'preco_unitario' => 'decimal:2',
+    ];
+
     public $timestamps = true;
 
+    /**
+     * PedidoProduto pertence a um Pedido
+     */
     public function pedido(): BelongsTo
     {
         return $this->belongsTo(Pedido::class, 'id_pedido');
     }
 
+    /**
+     * PedidoProduto pertence a um Produto
+     */
     public function produto(): BelongsTo
     {
         return $this->belongsTo(Produto::class, 'id_produto');

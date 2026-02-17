@@ -19,6 +19,7 @@
             <div class="w-100">
                 <a href="{{ route('cards.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Cards</a>
                 <a href="{{ route('carousels.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Carrossel</a>
+                <a href="{{ route('produtos.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Produtos</a>
                 <a href="{{ route('pedidos.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Pedidos</a>
                 <a href="{{ route('clientes.index') }}" class="btn btn-purple btn-lg w-100 w-md-auto mb-2">Manter Clientes</a>
             </div>
