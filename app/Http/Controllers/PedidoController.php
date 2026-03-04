@@ -9,9 +9,41 @@ use App\Models\Cliente;
 use App\Models\PedidoProduto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use PDF;
 
 class PedidoController extends Controller
 {
+    public function pdfCliente(Cliente $cliente)
+    {
+        $cliente->load('pedidos');
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'cliente-pdf',
+            compact('cliente')
+        );
+
+        return $pdf->stream('cliente_'.$cliente->id.'.pdf');
+    }
+
+    public function pdfPedido(Pedido $pedido)
+    {
+        $pedido->load(['cliente', 'produtos']);
+
+        $pdf = Pdf::loadView('pdf.pedido', compact('pedido'));
+
+        return $pdf->stream('pedido_'.$pedido->chave_aleatoria.'.pdf');
+    }
+
+    // teste PDF
+    public function testePdf()
+    {
+        $nome = "Eduardo";
+
+        $pdf = Pdf::loadView('teste-pdf', compact('nome'));
+
+        return $pdf->stream();
+    }   
+
     // Listar pedidos
     public function index()
     {

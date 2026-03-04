@@ -6,7 +6,7 @@
     <title>Criar Pedido</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> -->
 </head>
 
 <body class="bg-light">
@@ -67,33 +67,31 @@
                 <!-- CARRINHO -->
                 <div class="mb-3">
                     <label class="form-label">Carrinho</label>
-
-                    <table class="table table-bordered" id="tabela-carrinho">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Produto</th>
-                                <th>Preço</th>
-                                <th>Quantidade</th>
-                                <th>Subtotal</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-
-                        <tbody></tbody>
-
-                        <tfoot>
-                            <tr class="table-light">
-                                <td colspan="3" class="text-end fw-bold">Total:</td>
-                                <td class="fw-bold" id="total">R$ 0,00</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle mb-0" id="tabela-carrinho">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Preço</th>
+                                    <th>Quantidade</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <!-- Total removido do tfoot -->
+                        </table>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    Criar Pedido
-                </button>
+                <div class="d-flex flex-row justify-content-between align-items-center w-100 gap-3 mt-3">
+                    <button type="submit" class="btn btn-success flex-shrink-0">
+                        Criar Pedido
+                    </button>
+                    <div class="fw-bold fs-5 text-end ms-auto" id="total-area">
+                        Total: <span id="total">R$ 0,00</span>
+                    </div>
+                </div>
 
             </form>
         </div>
@@ -182,49 +180,31 @@ function atualizarCarrinho() {
                 <input type="hidden"
                        name="produtos[${produto.id}]"
                        value="${produto.quantidade}">
-
-                <div class="d-flex align-items-center">
-
+                <div class="d-flex align-items-center flex-wrap gap-2">
                     ${produto.imagem 
                         ? `<img src="/images/${produto.imagem}" 
-                               style="width:50px;height:50px;
-                               object-fit:cover;
-                               margin-right:10px;
-                               border-radius:6px;">`
+                               class="rounded" style="width:40px;height:40px;object-fit:cover;">`
                         : ''}
-
                     <div>
                         <strong>${produto.nome}</strong>
-
-                        <div class="small text-muted">
-                            ${produto.descricao}
-                        </div>
-
-                        <div class="small">
-                            Qtd/Caixa: ${produto.quantidade_por_caixa}
-                        </div>
+                        <div class="small">Qtd/Caixa: ${produto.quantidade_por_caixa}</div>
                     </div>
-
                 </div>
             </td>
-
-            <td>
+            <td class="text-nowrap">
                 R$ ${produto.preco.toFixed(2).replace('.', ',')}
             </td>
-
             <td>
-                <div class="input-group" style="max-width: 130px;">
+                <div class="input-group input-group-sm flex-nowrap" style="max-width: 120px;">
                     <button type="button"
                             class="btn btn-outline-secondary btn-sm"
                             onclick="alterarQuantidade(${produto.id}, -1)">
                         -
                     </button>
-
                     <input type="number"
                            class="form-control form-control-sm text-center"
                            value="${produto.quantidade}"
                            readonly>
-
                     <button type="button"
                             class="btn btn-outline-secondary btn-sm"
                             onclick="alterarQuantidade(${produto.id}, 1)">
@@ -232,11 +212,9 @@ function atualizarCarrinho() {
                     </button>
                 </div>
             </td>
-
-            <td>
+            <td class="text-nowrap">
                 R$ ${subtotal.toFixed(2).replace('.', ',')}
             </td>
-
             <td>
                 <button type="button"
                         class="btn btn-danger btn-sm"

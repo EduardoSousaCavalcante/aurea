@@ -8,6 +8,22 @@ use App\Http\Controllers\CarouselController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ClienteController;
 
+//PDF do clente
+Route::get('/cliente/{cliente}/pdf', [PedidoController::class, 'pdfCliente']
+);
+
+Route::get('/teste-cliente/{cliente}', [PedidoController::class, 'testeCliente']
+);
+
+Route::get('/pedidos/{pedido}/pdf', [PedidoController::class, 'pdfPedido'])
+    ->name('pedidos.pdf');
+
+//PDF do pedido
+Route::get('/pedido/{id}/pdf', [PedidoController::class, 'pdfPedido']);
+
+// teste PDF
+Route::get('/teste-pdf', [PedidoController::class, 'testePdf']);
+
 // Página pública (inicio)
 Route::get('/', function () {
     // Cards em ordem cronológica (do mais novo para o mais antigo)

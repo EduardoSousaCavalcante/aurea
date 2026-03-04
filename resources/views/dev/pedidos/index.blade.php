@@ -64,6 +64,10 @@
                                 <a href="{{ route('pedidos.edit', $pedido) }}" class="btn btn-sm btn-warning">
                                     Editar
                                 </a>
+                                <a href="{{ route('pedidos.pdf', $pedido) }}" 
+                                    class="btn btn-sm btn-secondary" target="_blank">
+                                        Baixar PDF
+                                    </a>
                                 <form action="{{ route('pedidos.destroy', $pedido) }}" method="POST" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')

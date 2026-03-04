@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ClienteController extends Controller
 {
+    public function pdfCliente(Cliente $cliente)
+    {
+        $cliente->load('pedidos');
+
+        $pdf = Pdf::loadView('cliente-pdf', compact('cliente'));
+
+        return $pdf->stream('cliente_'.$cliente->id.'.pdf');
+    }
+    
     /**
      * Display a listing of the resource.
      */
