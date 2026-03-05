@@ -36,20 +36,27 @@
                 <!-- CLIENTE -->
                 <div class="mb-3">
                     <label class="form-label">Cliente</label>
-                    <select name="id_cliente" class="form-control">
-                        <option value="">Selecione um cliente</option>
-                        @foreach($clientes as $cliente)
-                            <option value="{{ $cliente->id }}">
-                                {{ $cliente->razao_social }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" id="razao-input" class="form-control" placeholder="Razão Social">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="apelido-input" class="form-control" placeholder="Apelido">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" id="codigo-input" class="form-control" placeholder="Código">
+                        </div>
+                    </div>
+                    <div id="client-suggestions" class="mt-2" style="max-height: 200px; overflow-y: auto;"></div>
+                    <button type="button" id="selecionar-cliente-btn" class="btn btn-primary mt-2" disabled>Selecionar Cliente</button>
+                    <p id="cliente-selecionado" class="mt-2 fw-bold"></p>
+                    <input type="hidden" name="id_cliente" id="id_cliente">
                 </div>
 
                 <!-- PRODUTO -->
                 <div class="mb-3">
                     <label class="form-label">Produto</label>
-                    <select id="produto-select" class="form-control">
+                    <select id="produto-select" class="form-control" disabled>
                         <option value="">Selecione um produto</option>
                         @foreach($produtos as $produto)
                             <option value="{{ $produto->id }}">
@@ -59,7 +66,7 @@
                     </select>
 
                     <button type="button" class="btn btn-primary mt-2"
-                        onclick="adicionarProdutoCarrinho()">
+                        onclick="adicionarProdutoCarrinho()" id="adicionar-produto-btn" disabled>
                         Adicionar
                     </button>
                 </div>
@@ -85,8 +92,8 @@
                 </div>
 
                 <div class="d-flex flex-row justify-content-between align-items-center w-100 gap-3 mt-3">
-                    <button type="submit" class="btn btn-success flex-shrink-0">
-                        Criar Pedido
+                    <button type="submit" class="btn btn-success flex-shrink-0" id="criar-pedido-btn" disabled>
+                        Finalizar Pedido
                     </button>
                     <div class="fw-bold fs-5 text-end ms-auto" id="total-area">
                         Total: <span id="total">R$ 0,00</span>
@@ -98,11 +105,74 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 const produtos = @json($produtos);
+const clientes = @json($clientes);
 let carrinho = [];
+let clienteSelecionado = null;
+
+$(document).ready(function() {
+    $('#razao-input, #apelido-input, #codigo-input').on('input', function() {
+        filtrarClientes();
+    });
+});
+
+function filtrarClientes() {
+    const razaoTerm = $('#razao-input').val().toLowerCase();
+    const apelidoTerm = $('#apelido-input').val().toLowerCase();
+    const codigoTerm = $('#codigo-input').val().toLowerCase();
+
+    const filtered = clientes.filter(cliente => {
+        const razao = (cliente.razao_social || '').toLowerCase();
+        const apelido = (cliente.apelido || '').toLowerCase();
+        const codigo = (cliente.codigo || '').toLowerCase();
+
+        return (razao.includes(razaoTerm) || razaoTerm === '') &&
+               (apelido.includes(apelidoTerm) || apelidoTerm === '') &&
+               (codigo.includes(codigoTerm) || codigoTerm === '');
+    });
+
+    const suggestionsDiv = $('#client-suggestions');
+    suggestionsDiv.empty();
+
+    if (filtered.length > 0) {
+        filtered.forEach(cliente => {
+            const div = $('<div class="p-2 border-bottom suggestion-item" style="cursor: pointer;"></div>');
+            div.text(`${cliente.razao_social} - ${cliente.apelido || ''} - ${cliente.codigo || ''}`);
+            div.on('click', function() {
+                selecionarCliente(cliente);
+            });
+            suggestionsDiv.append(div);
+        });
+    } else {
+        suggestionsDiv.html('<p class="text-muted">Nenhum cliente encontrado.</p>');
+    }
+}
+
+function selecionarCliente(cliente) {
+    clienteSelecionado = cliente;
+    $('#cliente-selecionado').text(`Cliente selecionado: ${cliente.razao_social} - ${cliente.apelido || ''} - ${cliente.codigo || ''}`);
+    $('#id_cliente').val(cliente.id);
+    $('#selecionar-cliente-btn').prop('disabled', false);
+    $('#produto-select').prop('disabled', false);
+    $('#adicionar-produto-btn').prop('disabled', false);
+    $('#criar-pedido-btn').prop('disabled', false);
+    $('#client-suggestions').empty();
+}
+
+$('#selecionar-cliente-btn').on('click', function() {
+    if (clienteSelecionado) {
+        // Already selected, perhaps do nothing or confirm
+    }
+});
 
 function adicionarProdutoCarrinho() {
+    if (!clienteSelecionado) {
+        alert('Selecione um cliente primeiro.');
+        return;
+    }
 
     const select = document.getElementById('produto-select');
     const id = parseInt(select.value);
