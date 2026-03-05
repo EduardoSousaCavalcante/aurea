@@ -14,7 +14,7 @@ class ProdutoController extends Controller
         $produtos = Produto::where('nome', 'like', "%" . $termo . "%")
             ->orderBy('nome')
             ->limit(10)
-            ->get(['id', 'nome', 'preco', 'quantidade_por_caixa', 'descricao', 'imagem']);
+            ->get(['id', 'nome', 'preco', 'quantidade_por_caixa', 'descricao', 'estoque', 'imagem']);
         return response()->json($produtos);
     }
     // Listar produtos
@@ -55,6 +55,7 @@ class ProdutoController extends Controller
             'descricao' => $request->descricao,
             'quantidade_por_caixa' => $request->quantidade_por_caixa,
             'preco' => $request->preco,
+            'estoque' => $request->estoque,
             'imagem' => $nomeImagem,
         ]);
 
@@ -77,6 +78,7 @@ class ProdutoController extends Controller
             'descricao' => 'required',
             'quantidade_por_caixa' => 'required|integer|min:1',
             'preco' => 'required|numeric|min:0',
+            'estoque' => 'required|integer|min:0',
             'imagem' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
@@ -84,6 +86,7 @@ class ProdutoController extends Controller
         $produto->descricao = $request->descricao;
         $produto->quantidade_por_caixa = $request->quantidade_por_caixa;
         $produto->preco = $request->preco;
+        $produto->estoque = $request->estoque;
 
         if ($request->hasFile('imagem')) {
             $imagem = $request->file('imagem');

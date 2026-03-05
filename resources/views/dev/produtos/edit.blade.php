@@ -16,6 +16,10 @@
             <input type="number" name="quantidade_por_caixa" id="quantidade_por_caixa" class="form-control" value="{{ $produto->quantidade_por_caixa }}" required min="1">
         </div>
         <div class="mb-3">
+            <label for="estoque" class="form-label">Estoque</label>
+            <input type="number" name="estoque" id="estoque" class="form-control" value="{{ $produto->estoque }}" required min="0">
+        </div>
+        <div class="mb-3">
             <label for="preco" class="form-label">Preço</label>
             <input type="number" name="preco" id="preco" class="form-control" value="{{ $produto->preco }}" required step="0.01" min="0">
         </div>

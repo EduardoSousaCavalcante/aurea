@@ -57,6 +57,7 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Produto</th>
+                                        <th>Estoque</th>
                                         <th>Preço Unitário</th>
                                         <th>Quantidade</th>
                                         <th>Subtotal</th>
@@ -66,12 +67,13 @@
                                     @foreach($produtos as $produto)
                                         <tr>
                                             <td>{{ $produto->nome }}</td>
+                                            <td>{{ $produto->estoque }}</td>
                                             <td>R$ {{ number_format($produto->preco, 2, ',', '.') }}</td>
                                             <td>
                                                 <input type="number" name="produtos[{{ $produto->id }}]" 
                                                        class="form-control quantidade-input" 
                                                        value="{{ $produtosPedido[$produto->id] ?? 0 }}" 
-                                                       min="0" data-preco="{{ $produto->preco }}">
+                                                       min="0" max="{{ $produto->estoque }}" data-preco="{{ $produto->preco }}" data-estoque="{{ $produto->estoque }}">
                                             </td>
                                             <td class="subtotal">R$ 0,00</td>
                                         </tr>
@@ -121,7 +123,16 @@
         calcularTotais();
         
         inputs.forEach(input => {
-            input.addEventListener('change', calcularTotais);
+            input.addEventListener('change', function() {
+                if (input.dataset.estoque) {
+                    const estoque = parseInt(input.dataset.estoque);
+                    if (parseInt(input.value) > estoque) {
+                        input.value = estoque;
+                        alert('Quantidade limitada pelo estoque disponível.');
+                    }
+                }
+                calcularTotais();
+            });
             input.addEventListener('input', calcularTotais);
         });
     </script>

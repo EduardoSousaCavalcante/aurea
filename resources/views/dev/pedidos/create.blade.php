@@ -59,8 +59,8 @@
                     <select id="produto-select" class="form-control" disabled>
                         <option value="">Selecione um produto</option>
                         @foreach($produtos as $produto)
-                            <option value="{{ $produto->id }}">
-                                {{ $produto->nome }} - R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                            <option value="{{ $produto->id }}" data-estoque="{{ $produto->estoque }}" {{ $produto->estoque <= 0 ? 'disabled' : '' }}>
+                                {{ $produto->nome }} ({{ $produto->estoque }} em estoque) - R$ {{ number_format($produto->preco, 2, ',', '.') }}
                             </option>
                         @endforeach
                     </select>
@@ -196,8 +196,14 @@ function adicionarProdutoCarrinho() {
         quantidade_por_caixa: produtoOriginal.quantidade_por_caixa || '-',
         imagem: produtoOriginal.imagem || null,
         preco: parseFloat(produtoOriginal.preco),
+        estoque: parseInt(produtoOriginal.estoque) || 0,
         quantidade: 1
     };
+
+    if (produto.estoque <= 0) {
+        alert('Produto sem estoque disponível.');
+        return;
+    }
 
     carrinho.push(produto);
 
@@ -217,6 +223,12 @@ function alterarQuantidade(id, delta) {
 
     if (item.quantidade < 1) {
         item.quantidade = 1;
+    }
+
+    // não ultrapassar estoque
+    if (item.quantidade > item.estoque) {
+        item.quantidade = item.estoque;
+        alert('Quantidade limitada pelo estoque disponível.');
     }
 
     atualizarCarrinho();

@@ -25,6 +25,7 @@
                 <th>Nome</th>
                 <th>Descrição</th>
                 <th>Qtd/Caixa</th>
+                <th>Estoque</th>
                 <th>Preço</th>
                 <th>Ações</th>
             </tr>
@@ -36,6 +37,7 @@
                 <td>{{ $produto->nome }}</td>
                 <td>{{ $produto->descricao }}</td>
                 <td>{{ $produto->quantidade_por_caixa }}</td>
+                <td>{{ $produto->estoque }}</td>
                 <td>R$ {{ number_format($produto->preco, 2, ',', '.') }}</td>
                 <td>
                     <a href="{{ route('produtos.edit', $produto->id) }}" class="btn btn-primary btn-sm mb-2">Editar</a>

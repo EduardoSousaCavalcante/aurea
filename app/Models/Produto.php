@@ -16,6 +16,7 @@ class Produto extends Model
         'descricao',
         'quantidade_por_caixa',
         'preco',
+        'estoque',
         'imagem',
     ];
 
@@ -31,4 +32,13 @@ class Produto extends Model
             'id_pedido'
         )->withPivot('quantidade', 'preco_unitario');
     }
+
+    /**
+     * Cast fields to native types.
+     */
+    protected $casts = [
+        'preco' => 'decimal:2',
+        'estoque' => 'integer',
+        'quantidade_por_caixa' => 'integer',
+    ];
 }

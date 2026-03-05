@@ -58,7 +58,8 @@ class PedidoController extends Controller
     public function create()
     {
         $clientes = Cliente::orderBy('razao_social')->get();
-        $produtos = Produto::orderBy('nome')->get();
+        // somente produtos que ainda possuem estoque para evitar seleção de itens esgotados
+        $produtos = Produto::where('estoque', '>', 0)->orderBy('nome')->get();
 
         return view('dev.pedidos.create', compact('clientes', 'produtos'));
     }
@@ -89,6 +90,15 @@ class PedidoController extends Controller
         foreach ($request->produtos as $idProduto => $quantidade) {
             if ($quantidade > 0) {
                 $produto = Produto::findOrFail($idProduto);
+
+                if ($produto->estoque < $quantidade) {
+                    DB::rollBack();
+                    return back()->with('error', "Estoque insuficiente para o produto {$produto->nome}")->withInput();
+                }
+
+                // decrementar estoque
+                $produto->estoque -= $quantidade;
+                $produto->save();
 
                 PedidoProduto::create([
                     'id_pedido' => $pedido->id,
@@ -153,15 +163,31 @@ class PedidoController extends Controller
                 'id_cliente' => $request->id_cliente,
             ]);
 
+            // restaurar estoque dos produtos antigos antes de apagar
+            $oldItems = PedidoProduto::where('id_pedido', $pedido->id)->get();
+            foreach ($oldItems as $item) {
+                $p = Produto::find($item->id_produto);
+                if ($p) {
+                    $p->estoque += $item->quantidade;
+                    $p->save();
+                }
+            }
+
             // Remove produtos antigos
             PedidoProduto::where('id_pedido', $pedido->id)->delete();
 
-            // Insere novamente
+            // Insere novamente e decrementa estoque
             foreach ($request->produtos as $idProduto => $quantidade) {
-
                 if ($quantidade > 0) {
-
                     $produto = Produto::findOrFail($idProduto);
+
+                    if ($produto->estoque < $quantidade) {
+                        DB::rollBack();
+                        return back()->with('error', "Estoque insuficiente para o produto {$produto->nome}")->withInput();
+                    }
+
+                    $produto->estoque -= $quantidade;
+                    $produto->save();
 
                     PedidoProduto::create([
                         'id_pedido' => $pedido->id,
@@ -192,6 +218,16 @@ class PedidoController extends Controller
         DB::beginTransaction();
 
         try {
+
+            // restaurar estoque antes de excluir
+            $items = PedidoProduto::where('id_pedido', $pedido->id)->get();
+            foreach ($items as $item) {
+                $p = Produto::find($item->id_produto);
+                if ($p) {
+                    $p->estoque += $item->quantidade;
+                    $p->save();
+                }
+            }
 
             PedidoProduto::where('id_pedido', $pedido->id)->delete();
             $pedido->delete();

@@ -14,6 +14,35 @@
         <a href="{{ route('produtos.index') }}" class="btn btn-secondary">Voltar</a>
     </div>
 
+    <!-- Formulário de cadastro rápido de produto -->
+    <div class="card mb-5 p-3">
+        <h5>Cadastrar produto</h5>
+        <form action="{{ route('produtos.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="nome" class="form-control" placeholder="Nome" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="number" name="quantidade_por_caixa" class="form-control" placeholder="Qtd por caixa" min="1" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="number" name="estoque" class="form-control" placeholder="Estoque inicial" min="0" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="number" name="preco" class="form-control" placeholder="Preço" step="0.01" min="0" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="file" name="imagem" class="form-control" accept="image/*">
+                </div>
+                <div class="col-md-12">
+                    <textarea name="descricao" class="form-control" placeholder="Descrição" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Salvar produto</button>
+        </form>
+    </div>
+
 
     <!-- Listagem de produtos com botão de adicionar ao carrinho -->
     <div class="mb-4">
@@ -29,10 +58,11 @@
                         <h5 class="card-title">{{ $produto->nome }}</h5>
                         <p class="card-text">{{ $produto->descricao }}</p>
                         <p class="mb-1"><strong>Qtd/Caixa:</strong> {{ $produto->quantidade_por_caixa }}</p>
+                        <p class="mb-1"><strong>Estoque:</strong> {{ $produto->estoque }}</p>
                         <p class="mb-1"><strong>Preço:</strong> R$ {{ number_format($produto->preco, 2, ',', '.') }}</p>
                         <div class="input-group mb-2">
-                            <input type="number" class="form-control form-control-sm" min="1" value="1" id="qtd-{{ $produto->id }}">
-                            <button type="button" class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho({{ $produto->id }}, '{{ addslashes($produto->nome) }}', {{ $produto->preco }})">Adicionar</button>
+                            <input type="number" class="form-control form-control-sm" min="1" value="1" id="qtd-{{ $produto->id }}" max="{{ $produto->estoque }}">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho({{ $produto->id }}, '{{ addslashes($produto->nome) }}', {{ $produto->preco }}, {{ $produto->estoque }})">Adicionar</button>
                         </div>
                     </div>
                 </div>
@@ -56,15 +86,23 @@ buscaInput.addEventListener('input', function() {
 <script>
 let carrinho = [];
 
-function adicionarAoCarrinho(id, nome, preco) {
+function adicionarAoCarrinho(id, nome, preco, estoque) {
     const qtdInput = document.getElementById('qtd-' + id);
     const quantidade = parseInt(qtdInput.value);
     if (!quantidade || quantidade < 1) return;
+    if (quantidade > estoque) {
+        alert('Quantidade maior que estoque disponível');
+        return;
+    }
     const existente = carrinho.find(item => item.id === id);
     if (existente) {
+        if (existente.quantidade + quantidade > estoque) {
+            alert('Quantidade total supera o estoque disponível');
+            return;
+        }
         existente.quantidade += quantidade;
     } else {
-        carrinho.push({ id, nome, preco, quantidade });
+        carrinho.push({ id, nome, preco, quantidade, estoque });
     }
     renderCarrinho();
 }
