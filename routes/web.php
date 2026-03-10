@@ -24,14 +24,19 @@ Route::get('/pedido/{id}/pdf', [PedidoController::class, 'pdfPedido']);
 // teste PDF
 Route::get('/teste-pdf', [PedidoController::class, 'testePdf']);
 
-// Página pública (inicio)
+// Página pública (inicio) - DESATIVADO
+// Route::get('/', function () {
+//     // Cards em ordem cronológica (do mais novo para o mais antigo)
+//     $cards = \App\Models\Card::orderBy('created_at', 'desc')->get();
+//     // Cards mais visualizados (top 4, por exemplo)
+//     $mostViewedCards = Card::orderBy('views', 'desc')->take(4)->get();
+//     $carousels = \App\Models\Carousel::all(); // Pega todos os carousels do banco
+//     return view('inicio', compact('cards', 'mostViewedCards', 'carousels'));
+// })->name('inicio');
+
+// Redireciona para a área de dev
 Route::get('/', function () {
-    // Cards em ordem cronológica (do mais novo para o mais antigo)
-    $cards = \App\Models\Card::orderBy('created_at', 'desc')->get();
-    // Cards mais visualizados (top 4, por exemplo)
-    $mostViewedCards = Card::orderBy('views', 'desc')->take(4)->get();
-    $carousels = \App\Models\Carousel::all(); // Pega todos os carousels do banco
-    return view('inicio', compact('cards', 'mostViewedCards', 'carousels'));
+    return redirect('/dev');
 })->name('inicio');
 
 // Autenticação

@@ -12,6 +12,9 @@
 
 </head>
 <body>
+    <!-- PÁGINA DE INÍCIO COMENTADA - REDIRECIONADO PARA ÁREA DE DEV -->
+    
+    {{--
     <nav class="navbar navbar-expand-lg navbar bg-light shadow-lg d-flex p-3 justify-content-between">
         <div class="container-fluid">
             <div class="d-flex align-items-center">
@@ -155,7 +158,7 @@
                 temaIcon.classList.add('bi-moon-fill');
             }
         });
-
     </script>
+    -->
 </body>
 </html>
