@@ -144,5 +144,5 @@
 
 
 <h3 style="text-align: right;">
-    Total Geral: R$ {{ number_format($totalGeral, 2, ',', '.') }}
+    Total do Pedido: R$ {{ number_format($totalGeral, 2, ',', '.') }}
 </h3>
