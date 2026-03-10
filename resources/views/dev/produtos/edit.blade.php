@@ -8,6 +8,10 @@
             <input type="text" name="nome" id="nome" class="form-control" value="{{ $produto->nome }}" required>
         </div>
         <div class="mb-3">
+            <label for="sku" class="form-label">SKU</label>
+            <input type="text" name="sku" id="sku" class="form-control" value="{{ $produto->sku }}" required>
+        </div>
+        <div class="mb-3">
             <label for="descricao" class="form-label">Descrição</label>
             <textarea name="descricao" id="descricao" class="form-control" required>{{ $produto->descricao }}</textarea>
         </div>

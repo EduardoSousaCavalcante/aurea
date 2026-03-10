@@ -24,6 +24,9 @@
                     <input type="text" name="nome" class="form-control" placeholder="Nome" required>
                 </div>
                 <div class="col-md-4">
+                    <input type="text" name="sku" class="form-control" placeholder="SKU do produto" required>
+                </div>
+                <div class="col-md-4">
                     <input type="number" name="quantidade_por_caixa" class="form-control" placeholder="Qtd por caixa" min="1" required>
                 </div>
                 <div class="col-md-4">

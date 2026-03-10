@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
             $table->string('nome', 100);
+            $table->string('sku')->unique(); // novo campo SKU
             $table->text('descricao');
             $table->integer('quantidade_por_caixa');
             $table->decimal('preco', 10, 2);
@@ -23,6 +24,7 @@ return new class extends Migration
         \DB::table('produtos')->insert([
             [
                 'nome' => 'Caixa de Bombom',
+                'sku' => 'BOM001',
                 'descricao' => 'Caixa com 20 bombons sortidos.',
                 'quantidade_por_caixa' => 20,
                 'preco' => 29.90,
@@ -33,6 +35,7 @@ return new class extends Migration
             ],
             [
                 'nome' => 'Barra de Chocolate',
+                'sku' => 'CHO001',
                 'descricao' => 'Barra de chocolate ao leite 200g.',
                 'quantidade_por_caixa' => 10,
                 'preco' => 15.50,
@@ -43,6 +46,7 @@ return new class extends Migration
             ],
             [
                 'nome' => 'Pacote de Balas',
+                'sku' => 'BAL001',
                 'descricao' => 'Pacote com 100 balas sortidas.',
                 'quantidade_por_caixa' => 100,
                 'preco' => 9.99,

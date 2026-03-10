@@ -12,11 +12,23 @@ class ProdutoController extends Controller
     {
         $termo = $request->get('q', '');
         $produtos = Produto::where('nome', 'like', "%" . $termo . "%")
+            ->orWhere('sku', 'like', "%" . $termo . "%")
             ->orderBy('nome')
             ->limit(10)
-            ->get(['id', 'nome', 'preco', 'quantidade_por_caixa', 'descricao', 'estoque', 'imagem']);
+            ->get([
+                'id',
+                'sku',
+                'nome',
+                'preco',
+                'quantidade_por_caixa',
+                'descricao',
+                'estoque',
+                'imagem'
+            ]);
+
         return response()->json($produtos);
     }
+
     // Listar produtos
     public function index()
     {
@@ -36,9 +48,11 @@ class ProdutoController extends Controller
 
         $request->validate([
             'nome' => 'required|max:100',
+            'sku' => 'required|max:50|unique:produtos,sku',
             'descricao' => 'required',
             'quantidade_por_caixa' => 'required|integer|min:1',
             'preco' => 'required|numeric|min:0',
+            'estoque' => 'required|integer|min:0',
             'imagem' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
@@ -52,6 +66,7 @@ class ProdutoController extends Controller
 
         Produto::create([
             'nome' => $request->nome,
+            'sku' => $request->sku,
             'descricao' => $request->descricao,
             'quantidade_por_caixa' => $request->quantidade_por_caixa,
             'preco' => $request->preco,
@@ -75,6 +90,7 @@ class ProdutoController extends Controller
 
         $request->validate([
             'nome' => 'required|max:100',
+            'sku' => 'required|max:50|unique:produtos,sku,' . $produto->id,
             'descricao' => 'required',
             'quantidade_por_caixa' => 'required|integer|min:1',
             'preco' => 'required|numeric|min:0',
@@ -83,6 +99,7 @@ class ProdutoController extends Controller
         ]);
 
         $produto->nome = $request->nome;
+        $produto->sku = $request->sku;
         $produto->descricao = $request->descricao;
         $produto->quantidade_por_caixa = $request->quantidade_por_caixa;
         $produto->preco = $request->preco;

@@ -92,4 +92,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dev/carousels/{carousel}/edit', [CarouselController::class, 'edit'])->name('carousels.edit');
     Route::put('/dev/carousels/{carousel}', [CarouselController::class, 'update'])->name('carousels.update');
     Route::delete('/dev/carousels/{carousel}', [CarouselController::class, 'destroy'])->name('carousels.destroy');
+
+    // Gestão de estoque
+Route::get('/dev/estoque', [App\Http\Controllers\EstoqueController::class, 'index'])
+    ->name('estoque.index');
+
+Route::post('/dev/estoque', [App\Http\Controllers\EstoqueController::class, 'update'])
+    ->name('estoque.update');
 });
