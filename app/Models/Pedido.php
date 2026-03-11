@@ -18,10 +18,13 @@ class Pedido extends Model
         'chave_aleatoria',
         'id_cliente',
         'data_pedido',
+        'data_entrega',
+        'metodo_pagamento',
     ];
 
     protected $casts = [
         'data_pedido' => 'datetime',
+        'data_entrega' => 'date',
     ];
 
     /**
@@ -30,6 +33,7 @@ class Pedido extends Model
     protected static function booted(): void
     {
         static::creating(function ($pedido) {
+
             if (empty($pedido->chave_aleatoria)) {
                 $pedido->chave_aleatoria = self::gerarChaveAleatoria();
             }
@@ -37,6 +41,7 @@ class Pedido extends Model
             if (empty($pedido->data_pedido)) {
                 $pedido->data_pedido = now();
             }
+
         });
     }
 
@@ -46,7 +51,9 @@ class Pedido extends Model
     public static function gerarChaveAleatoria(): string
     {
         do {
+
             $chave = strtoupper(Str::random(12));
+
         } while (self::where('chave_aleatoria', $chave)->exists());
 
         return $chave;
@@ -57,11 +64,14 @@ class Pedido extends Model
      */
     public function cliente(): BelongsTo
     {
-        return $this->belongsTo(Cliente::class, 'id_cliente');
+        return $this->belongsTo(
+            Cliente::class,
+            'id_cliente'
+        );
     }
 
     /**
-     * Pedido possui vários Produtos (via tabela pivot)
+     * Pedido possui vários Produtos (tabela pivot)
      */
     public function produtos(): BelongsToMany
     {
@@ -71,7 +81,10 @@ class Pedido extends Model
             'id_pedido',
             'id_produto'
         )
-        ->withPivot(['quantidade', 'preco_unitario'])
+        ->withPivot([
+            'quantidade',
+            'preco_unitario'
+        ])
         ->withTimestamps();
     }
 }

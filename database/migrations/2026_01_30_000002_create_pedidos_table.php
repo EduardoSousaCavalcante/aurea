@@ -13,12 +13,14 @@ return new class extends Migration
             $table->unsignedBigInteger('id_cliente');
             $table->string('chave_aleatoria', 12)->unique();
             $table->dateTime('data_pedido')->nullable();
+            $table->date('data_entrega')->nullable();
+            $table->string('metodo_pagamento')->nullable();
             $table->timestamps();
 
             $table->foreign('id_cliente')
-                  ->references('id')
-                  ->on('clientes')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('clientes')
+                ->onDelete('cascade');
         });
     }
 

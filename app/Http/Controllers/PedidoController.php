@@ -71,32 +71,38 @@ class PedidoController extends Controller
         'id_cliente' => 'required|exists:clientes,id',
         'produtos' => 'required|array|min:1',
         'produtos.*' => 'integer|min:1',
+        'data_entrega' => 'nullable|date',
+        'metodo_pagamento' => 'required|string',
     ]);
 
     DB::beginTransaction();
 
     try {
-        // 1️⃣ Gera a chave aleatória
+
         $chave = \Str::upper(\Str::random(12));
 
-        // 2️⃣ Cria pedido
         $pedido = Pedido::create([
             'id_cliente' => $request->id_cliente,
             'chave_aleatoria' => $chave,
             'data_pedido' => now(),
+            'data_entrega' => $request->data_entrega,
+            'metodo_pagamento' => $request->metodo_pagamento,
         ]);
 
-        // 3️⃣ Cria os produtos no pedido
         foreach ($request->produtos as $idProduto => $quantidade) {
+
             if ($quantidade > 0) {
+
                 $produto = Produto::findOrFail($idProduto);
 
                 if ($produto->estoque < $quantidade) {
-                    DB::rollBack();
-                    return back()->with('error', "Estoque insuficiente para o produto {$produto->nome}")->withInput();
-                }
 
-                // decrementar estoque
+                    DB::rollBack();
+
+                    return back()
+                        ->with('error', "Estoque insuficiente para {$produto->nome}")
+                        ->withInput();
+                }
                 $produto->estoque -= $quantidade;
                 $produto->save();
 
@@ -111,12 +117,14 @@ class PedidoController extends Controller
 
         DB::commit();
 
-        return redirect()->route('pedidos.index')
+        return redirect()
+            ->route('pedidos.index')
             ->with('success', 'Pedido criado com sucesso! Chave: ' . $chave);
 
     } catch (\Exception $e) {
+
         DB::rollBack();
-        dd($e->getMessage()); // mostra erro real se falhar
+        dd($e->getMessage());
     }
 }
 
@@ -153,6 +161,8 @@ class PedidoController extends Controller
             'id_cliente' => 'required|exists:clientes,id',
             'produtos' => 'required|array|min:1',
             'produtos.*' => 'integer|min:0',
+            'data_entrega' => 'required|date',
+            'metodo_pagamento' => 'required|string'
         ]);
 
         DB::beginTransaction();

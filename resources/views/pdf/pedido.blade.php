@@ -51,9 +51,6 @@
             <p><strong>DOCES AGUIA COMERCIO VAREJISTA<br/>E SOCIEDADE UNIPESSOAL LTDA</strong></p>
             <p>DOCES AGUIA - AUREA LUCIA</p>
             <p>CNPJ: 46.689.087/0001-57</p>
-            <p>IE: 136229694114</p>
-            <p>RUA FLOR DE CABOLO, N° 4, CASA 2, Bairro: AE. Caralho</p>
-            <p>São Paulo, SP, 08235360</p>
         </td>
     </tr>
 </table>

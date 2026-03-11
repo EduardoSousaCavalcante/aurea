@@ -48,7 +48,6 @@
                         </div>
                     </div>
                     <div id="client-suggestions" class="mt-2" style="max-height: 200px; overflow-y: auto;"></div>
-                    <button type="button" id="selecionar-cliente-btn" class="btn btn-primary mt-2" disabled>Selecionar Cliente</button>
                     <p id="cliente-selecionado" class="mt-2 fw-bold"></p>
                     <input type="hidden" name="id_cliente" id="id_cliente">
                 </div>
@@ -90,7 +89,26 @@
                         </table>
                     </div>
                 </div>
+                <!-- PAGAMENTO E ENTREGA -->
+                <div class="row mt-3">
 
+                    <div class="col-md-6">
+                        <label class="form-label">Método de Pagamento</label>
+                        <select name="metodo_pagamento" id="metodo_pagamento" class="form-control" required>
+                            <option value="">Selecione</option>
+                            <option value="pix">PIX</option>
+                            <option value="boleto">Boleto</option>
+                            <option value="cartao">Cartão</option>
+                            <option value="dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Data de Entrega</label>
+                        <input type="date" name="data_entrega" class="form-control">
+                    </div>
+
+                </div>
                 <div class="d-flex flex-row justify-content-between align-items-center w-100 gap-3 mt-3">
                     <button type="submit" class="btn btn-success flex-shrink-0" id="criar-pedido-btn" disabled>
                         Finalizar Pedido
@@ -107,24 +125,34 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 const produtos = @json($produtos);
 const clientes = @json($clientes);
+
 let carrinho = [];
 let clienteSelecionado = null;
 
 $(document).ready(function() {
+
     $('#razao-input, #apelido-input, #codigo-input').on('input', function() {
         filtrarClientes();
     });
+
+    $('#metodo_pagamento').on('change', function() {
+        validarFormularioPedido();
+    });
+
 });
 
 function filtrarClientes() {
+
     const razaoTerm = $('#razao-input').val().toLowerCase();
     const apelidoTerm = $('#apelido-input').val().toLowerCase();
     const codigoTerm = $('#codigo-input').val().toLowerCase();
 
     const filtered = clientes.filter(cliente => {
+
         const razao = (cliente.razao_social || '').toLowerCase();
         const apelido = (cliente.apelido || '').toLowerCase();
         const codigo = (cliente.codigo || '').toLowerCase();
@@ -132,43 +160,53 @@ function filtrarClientes() {
         return (razao.includes(razaoTerm) || razaoTerm === '') &&
                (apelido.includes(apelidoTerm) || apelidoTerm === '') &&
                (codigo.includes(codigoTerm) || codigoTerm === '');
+
     });
 
     const suggestionsDiv = $('#client-suggestions');
     suggestionsDiv.empty();
 
     if (filtered.length > 0) {
+
         filtered.forEach(cliente => {
-            const div = $('<div class="p-2 border-bottom suggestion-item" style="cursor: pointer;"></div>');
+
+            const div = $('<div class="p-2 border-bottom suggestion-item" style="cursor:pointer;"></div>');
+
             div.text(`${cliente.razao_social} - ${cliente.apelido || ''} - ${cliente.codigo || ''}`);
+
             div.on('click', function() {
                 selecionarCliente(cliente);
             });
+
             suggestionsDiv.append(div);
+
         });
+
     } else {
+
         suggestionsDiv.html('<p class="text-muted">Nenhum cliente encontrado.</p>');
+
     }
 }
 
 function selecionarCliente(cliente) {
+
     clienteSelecionado = cliente;
+
     $('#cliente-selecionado').text(`Cliente selecionado: ${cliente.razao_social} - ${cliente.apelido || ''} - ${cliente.codigo || ''}`);
+
     $('#id_cliente').val(cliente.id);
-    $('#selecionar-cliente-btn').prop('disabled', false);
+
     $('#produto-select').prop('disabled', false);
     $('#adicionar-produto-btn').prop('disabled', false);
-    $('#criar-pedido-btn').prop('disabled', false);
+
     $('#client-suggestions').empty();
+
+    validarFormularioPedido();
 }
 
-$('#selecionar-cliente-btn').on('click', function() {
-    if (clienteSelecionado) {
-        // Already selected, perhaps do nothing or confirm
-    }
-});
-
 function adicionarProdutoCarrinho() {
+
     if (!clienteSelecionado) {
         alert('Selecione um cliente primeiro.');
         return;
@@ -180,15 +218,14 @@ function adicionarProdutoCarrinho() {
     if (!id) return;
 
     const produtoOriginal = produtos.find(p => parseInt(p.id) === id);
+
     if (!produtoOriginal) return;
 
-    // Evita duplicar produto
     if (carrinho.find(p => p.id === id)) {
         alert('Produto já está no carrinho!');
         return;
     }
 
-    // Clona o produto e garante tipos corretos
     const produto = {
         id: parseInt(produtoOriginal.id),
         nome: produtoOriginal.nome,
@@ -217,15 +254,13 @@ function alterarQuantidade(id, delta) {
     id = parseInt(id);
 
     const item = carrinho.find(p => p.id === id);
+
     if (!item) return;
 
     item.quantidade += delta;
 
-    if (item.quantidade < 1) {
-        item.quantidade = 1;
-    }
+    if (item.quantidade < 1) item.quantidade = 1;
 
-    // não ultrapassar estoque
     if (item.quantidade > item.estoque) {
         item.quantidade = item.estoque;
         alert('Quantidade limitada pelo estoque disponível.');
@@ -246,6 +281,7 @@ function removerProdutoCarrinho(id) {
 function atualizarCarrinho() {
 
     const tbody = document.querySelector('#tabela-carrinho tbody');
+
     tbody.innerHTML = '';
 
     let total = 0;
@@ -253,64 +289,82 @@ function atualizarCarrinho() {
     carrinho.forEach(produto => {
 
         const subtotal = produto.preco * produto.quantidade;
+
         total += subtotal;
 
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
-            <td>
-                <input type="hidden"
-                       name="produtos[${produto.id}]"
-                       value="${produto.quantidade}">
-                <div class="d-flex align-items-center flex-wrap gap-2">
-                    ${produto.imagem 
-                        ? `<img src="/images/${produto.imagem}" 
-                               class="rounded" style="width:40px;height:40px;object-fit:cover;">`
-                        : ''}
-                    <div>
-                        <strong>${produto.nome}</strong>
-                        <div class="small">Qtd/Caixa: ${produto.quantidade_por_caixa}</div>
-                    </div>
+        <td>
+            <input type="hidden" name="produtos[${produto.id}]" value="${produto.quantidade}">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                ${produto.imagem ? `<img src="/images/${produto.imagem}" class="rounded" style="width:40px;height:40px;object-fit:cover;">` : ''}
+                <div>
+                    <strong>${produto.nome}</strong>
+                    <div class="small">Qtd/Caixa: ${produto.quantidade_por_caixa}</div>
                 </div>
-            </td>
-            <td class="text-nowrap">
-                R$ ${produto.preco.toFixed(2).replace('.', ',')}
-            </td>
-            <td>
-                <div class="input-group input-group-sm flex-nowrap" style="max-width: 120px;">
-                    <button type="button"
-                            class="btn btn-outline-secondary btn-sm"
-                            onclick="alterarQuantidade(${produto.id}, -1)">
-                        -
-                    </button>
-                    <input type="number"
-                           class="form-control form-control-sm text-center"
-                           value="${produto.quantidade}"
-                           readonly>
-                    <button type="button"
-                            class="btn btn-outline-secondary btn-sm"
-                            onclick="alterarQuantidade(${produto.id}, 1)">
-                        +
-                    </button>
-                </div>
-            </td>
-            <td class="text-nowrap">
-                R$ ${subtotal.toFixed(2).replace('.', ',')}
-            </td>
-            <td>
-                <button type="button"
-                        class="btn btn-danger btn-sm"
-                        onclick="removerProdutoCarrinho(${produto.id})">
-                    Remover
-                </button>
-            </td>
+            </div>
+        </td>
+
+        <td class="text-nowrap">
+            R$ ${produto.preco.toFixed(2).replace('.', ',')}
+        </td>
+
+        <td>
+            <div class="input-group input-group-sm flex-nowrap" style="max-width:120px;">
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                onclick="alterarQuantidade(${produto.id}, -1)">-</button>
+
+                <input type="number" class="form-control form-control-sm text-center"
+                value="${produto.quantidade}" readonly>
+
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                onclick="alterarQuantidade(${produto.id}, 1)">+</button>
+            </div>
+        </td>
+
+        <td class="text-nowrap">
+            R$ ${subtotal.toFixed(2).replace('.', ',')}
+        </td>
+
+        <td>
+            <button type="button" class="btn btn-danger btn-sm"
+            onclick="removerProdutoCarrinho(${produto.id})">
+            Remover
+            </button>
+        </td>
         `;
 
         tbody.appendChild(tr);
+
     });
 
     document.getElementById('total').textContent =
         'R$ ' + total.toFixed(2).replace('.', ',');
+
+    validarFormularioPedido();
+}
+
+function validarFormularioPedido() {
+
+    const pagamento = document.getElementById('metodo_pagamento').value;
+
+    if (!clienteSelecionado) {
+        document.getElementById('criar-pedido-btn').disabled = true;
+        return;
+    }
+
+    if (carrinho.length === 0) {
+        document.getElementById('criar-pedido-btn').disabled = true;
+        return;
+    }
+
+    if (pagamento === "") {
+        document.getElementById('criar-pedido-btn').disabled = true;
+        return;
+    }
+
+    document.getElementById('criar-pedido-btn').disabled = false;
 }
 </script>
 
